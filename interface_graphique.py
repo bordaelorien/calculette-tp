@@ -15,8 +15,8 @@ class App(tk.Tk):
         ecran = tk.Frame(self, bg="#121213")
         ecran.pack(side="top", fill="x", pady=20, padx=20)
         
-        display_current_number = tk.Label(ecran, text="0", bg="#3a3a3c", anchor="w", justify="left", font=("Arial", 30), fg="white")
-        display_current_number.pack(fill="x")
+        display_current_formula = tk.Label(ecran, text="0", bg="#3a3a3c", anchor="w", justify="left", font=("Arial", 30), fg="white")
+        display_current_formula.pack(fill="x")
         
         display_result = tk.Label(ecran, text="", bg="#3a3a3c", justify="left", anchor="w", font=("Arial", 15), fg="white")
         display_result.pack(fill="x")
@@ -43,6 +43,9 @@ class App(tk.Tk):
         for j in range(0, 4, 2):
             button = tk.Button(buttons, bg="#53794e", fg="white", text=button_names[4][j//2], font=("Arial", 30), width=5)
             button.grid(row=4, column=j, columnspan=2, padx=5, pady=5, sticky="nswe")
+
+
+        current_formula = "0"
 
 app = App()
 app.mainloop()
