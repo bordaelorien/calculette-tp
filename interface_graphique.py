@@ -59,6 +59,7 @@ class App(tk.Tk):
         else:           
             if name == "AC":
                 self.current_formula = "0"
+                self.display_result.configure(text="")
             elif self.current_formula == "0":
                 self.current_formula = name
             else:
