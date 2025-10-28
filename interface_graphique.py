@@ -8,88 +8,114 @@ class App(tk.Tk):
         super().__init__()
         self.title("Calculatrice")
         self["bg"] = "#121213"
-        self.geometry("500x550")
-        self.configStyles()
-        self.initGraphique()
-
-    
-    def initGraphique(self):
-        #écran
-        ecran = tk.Frame(self, bg="#121213")
-        ecran.pack(side="top", fill="x", pady=20, padx=20)
-        
-        self.display_current_formula = tk.Label(ecran, text="0", bg="#5e5e5e", anchor="w", justify="left", font=("Arial", 30), fg="white")
-        self.display_current_formula.pack(fill="x")
-        
-        self.display_result = tk.Label(ecran, text="", bg="#5e5e5e", justify="left", anchor="w", font=("Arial", 20), fg="white")
-        self.display_result.pack(fill="x")
-
-        #boutons
-        buttons = tk.Frame(self, bg="#121213")
-        buttons.pack(fill="both", padx=20, pady=20)
-
-        for n in range(4):
-            buttons.rowconfigure(n, weight=1)
-        for n in range(4):
-            buttons.columnconfigure(n, weight=1)
-
-        button_names = [["1", "2", "3", "+"],
-                        ["4", "5", "6", "-"],
-                        ["7", "8", "9", "x"],
-                        ["0", "exp", "fibo", "/"],
-                        ["=", "AC"]]
-        
-        for i in range(4):
-            for j in range(4):
-                button = ttk.Button(buttons, text=button_names[i][j],
-                                   command = lambda name=button_names[i][j]: self.button_pressed(name))
-                button.grid(row=i, column=j, padx=5, pady=5)
-        for j in range(0, 4, 2):
-            button = ttk.Button(buttons, text=button_names[4][j//2],
-                               command = lambda name=button_names[4][j//2]: self.button_pressed(name), 
-                               style="GreenButton.TButton")
-            button.grid(row=4, column=j, columnspan=2, padx=5, pady=5, sticky="nswe")
+        self.geometry("400x200")
 
 
-        self.current_formula = "0"
+        left_panel = tk.Frame(self)
+        left_panel.pack(side="left")
+        right_panel = tk.Frame(self)
+        right_panel.pack(side="right")
 
-    
-    def button_pressed(self, name):
-        if name == "=":
-            self.display_result.configure(text=str(self.calculeResultat(self.current_formula)))
-        
-        else:           
-            if name == "AC":
-                self.current_formula = "0"
-                self.display_result.configure(text="")
-            elif self.current_formula == "0":
-                self.current_formula = name
+        self.lbox_options = tk.Listbox(left_panel, height=6)
+        for option in ["Addition", "Soustraction", "Multiplication", "Division", "Exponentielle", "Fibonacci"]:
+            self.lbox_options.insert("end", option)
+        self.lbox_options.pack()
+        self.lbox_options.bind("<<ListboxSelect>>", self.switchFrames)
+
+        operations = {"Addition":"+", "Soustraction":"-", "Multiplication":"x", "Division":"/"}
+        fonctions = {"Exponentielle":"exp", "Fibonacci":"fibonacci"}
+
+        self.frames_calculs = {}
+        for option in ["Addition", "Soustraction", "Multiplication", "Division", "Exponentielle", "Fibonacci"]:
+            self.frames_calculs[option] = tk.Frame(right_panel)
+            self.frames_calculs[option].grid(column=0, row=0, sticky="nsew")
+
+            subframe_top = tk.Frame(self.frames_calculs[option])
+            subframe_top.pack(side="top")
+            subframe_bottom = tk.Frame(self.frames_calculs[option])
+            subframe_bottom.pack(side="bottom")
+
+            resultat = tk.StringVar()
+            tk.Label(subframe_bottom, textvariable=resultat).pack(side="bottom")
+
+            if option in operations:
+                first_number = tk.Entry(subframe_top, justify="center")
+                first_number.pack(side="left")
+                operator = tk.Label(subframe_top, text=operations[option])
+                operator.pack(side="left")
+                second_number = tk.Entry(subframe_top, justify="center")
+                second_number.pack(side="right")
+                tk.Button(subframe_bottom, text="Calculer", 
+                          command=lambda resultat=resultat, operator=option, first_number=first_number, second_number=second_number: 
+                          resultat.set("Résultat : "+str(self.calculeResultat(operator, first_number.get(), second_number.get())))
+                          ).pack(side="top")
+
             else:
-                self.current_formula += name
-            self.display_current_formula.configure(text=self.current_formula)
+                function = tk.Label(subframe_top, text=fonctions[option]+"(")
+                function.pack(side="left")
+                number = tk.Entry(subframe_top, justify="center")
+                number.pack(side="left")
+                parenthesis = tk.Label(subframe_top, text=")")
+                parenthesis.pack(side="left")
+                tk.Button(subframe_bottom, text="Calculer", 
+                          command=lambda resultat=resultat, operator=option, number=number: 
+                          resultat.set("Résultat : "+str(self.calculeResultat(operator, number.get())))
+                          ).pack(side="top")
+
+            resultat = tk.StringVar()
+            tk.Label(subframe_bottom, textvariable=resultat).pack(side="bottom")
 
 
-    def calculeResultat(self, formula):
-        return "0"
+        self.lbox_options.select_set(0)
+        self.frames_calculs["Addition"].tkraise()
+
+
+
 
     
-    #configuration du style des boutons
-    def configStyles(self):
-        style = ttk.Style()
-        style.theme_use("default")
+    def switchFrames(self, event):
+        selected_index = self.lbox_options.curselection()
+        selected_option = self.lbox_options.get(selected_index)
+        self.frames_calculs[selected_option].tkraise()
 
-        style.configure("TButton", background="#3a3a3c", relief="flat", foreground="white",
-                        padding=[0,10], font=("Courier", 30))
-        style.map("TButton", background=[("pressed", "#5f5f63"), 
-                                        ("active", "#4a4a4d")],
-                                        foreground=[("active", "white")],
-                  relief=[("pressed", "sunken")])
-        self.option_add('*TButton*takeFocus', 0)
+    
+    def calculeResultat(self, operator, first_number, second_number=None):
+        #si il n'y a pas de deuxième nombre, c'est qu'on calcule une fonction
+        if second_number == None:
+            try:
+                first_number = int(first_number)
+                if operator == "Exponentielle":
+                    return exponentielle(first_number)
+                else:
+                    return fibonacci(first_number)
+            except ValueError:
+                return "Erreur"
+
+        #sinon c'est une operation    
+        else:
+            try:
+                first_number = int(first_number)
+                second_number = int(second_number)
+                if operator == "Addition":
+                    return addition(first_number, second_number)
+                elif operator == "Soustraction":
+                    return soustraction(first_number, second_number)
+                elif operator == "Multiplication":
+                    return multiplication(first_number, second_number)
+                else:
+                    return division(first_number, second_number)
+            except ValueError:
+                return "Erreur"
+            except ZeroDivisionError:
+                return "Erreur"
+
+
+                
         
-        style.configure("GreenButton.TButton", background="#53794e")
-        style.map("GreenButton.TButton", background=[("pressed", "#6e9e67"), 
-                                                    ("active", "#5f8d59")],
-                                                    foreground=[("active", "white")])
+
+
+
+
 
 
 app = App()
