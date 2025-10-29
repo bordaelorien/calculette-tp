@@ -3,16 +3,16 @@
 #pas le droit d'utiliser les fonctions natives de python à part + et -
 
 def addition(a, b):
-    return a+b
+    return 0
 
 def soustraction(a, b):
-    return a-b
+    return 0
 
 def multiplication(a, b):
-    return a*b
+    return 0
 
 def division(a, b):
-    return a/b
+    return 0
 
 def exponentielle(x):
     return 0
