@@ -108,15 +108,15 @@ class calculatrice:
 
 #Tests
 
-calc = Calculatrice()
+calculette=Calculatrice()
 
-print(calc.addition(7, 5))  # 12
-print(calc.soustraction(7, 5))  # 2
-print(calc.multiplication(7, -3))  # -21
-print(calc.division(22, 7, precision=6))  # ~3.142857
-print(calc.exponentielle(2, 10))  # 1024
-print(calc.exponentielle(2, -3, precision=8))  # ~0.12500000
-print(calc.fibonacci(10))  # 55
+print(calculette.addition(7, 5))
+print(calculette.soustraction(7, 5))
+print(calculette.multiplication(7, -3))
+print(calculette.division(22, 7, precision=6))
+print(calculette.exponentielle(2, 10))
+print(calculette.exponentielle(2, -3, precision=8))
+print(calculette.fibonacci(10))
 
 
 
