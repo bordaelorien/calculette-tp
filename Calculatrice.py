@@ -54,7 +54,7 @@ class calculatrice:
         while nombre_decimales<precision:
             tmp=0
             temps=0
-            while temps<precision:
+            while temps<10:
                 tmp+=reste
                 temps+=1
             reste=tmp
@@ -64,12 +64,11 @@ class calculatrice:
                 chiffre+=1
             decimales+=str(chiffre)
             nombre_decimales+=1
-        if quotient!=0:
-            if signe:
-                resu=f"-{quotient}.{decimales}"
-            else:
-                resu=f"{quotient}.{decimales}"
-        return resu
+        if signe:
+            resu=f"-{quotient}.{decimales}"
+        else:
+            resu=f"{quotient}.{decimales}"
+        return float(resu)
 
     def exponentielle(self,base:int,exp:int,precision:int):
         if exp==0:
@@ -89,7 +88,7 @@ class calculatrice:
             i+=1
         return self.division(1,puissance,precision=precision)
 
-    def fibonnaci(self,n:int):
+    def fibonacci(self,n:int):
         if n<0:
             raise ValueError("n doit être positif ou nul")
         if n==0:
@@ -108,15 +107,20 @@ class calculatrice:
 
 #Tests
 
-calculette=Calculatrice()
+calculette=calculatrice()
 
-print(calculette.addition(7, 5))
-print(calculette.soustraction(7, 5))
-print(calculette.multiplication(7, -3))
-print(calculette.division(22, 7, precision=6))
-print(calculette.exponentielle(2, 10))
-print(calculette.exponentielle(2, -3, precision=8))
+print(calculette.addition(7,5))
+print(calculette.soustraction(7,5))
+print(calculette.multiplication(7,-3))
+print(calculette.division(22,7,precision=6))
+print(calculette.exponentielle(2,10,precision=4))
+print(calculette.exponentielle(2,-3,precision=8))
 print(calculette.fibonacci(10))
 
-
-
+#12
+#2
+#-21
+#3.142857
+#1024
+#0.125
+#55
