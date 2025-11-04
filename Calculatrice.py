@@ -1,7 +1,7 @@
 #Projet Calculatrice Borda Elorien - Briffaut Milan
-https://github.com/bordaelorien/calculette-tp.git
+#https://github.com/bordaelorien/calculette-tp.git
 
-class calculatrice:
+class Calculatrice:
 
     def addition(self,a:int,b:int):
         return a+b
@@ -32,10 +32,10 @@ class calculatrice:
         else:
             return resu
 
-    def division(self,a:int,b:int,precision:int):
+    def division(self,a:int,b:int,precision=5):
         #Vérification de non division par 0
         if b==0:
-            raise ValueError("Impossible de diviser par 0")
+            raise ZeroDivisionError
         #Détermination du signe du résultat
         signe=False
         if a<0:
@@ -126,22 +126,24 @@ class calculatrice:
         #F_1 correspond alors à F(n)
         return F_1
 
-#Tests
 
-calculette=calculatrice()
+if __name__ == "__main__":
+    #Tests
 
-print(calculette.addition(7,5))
-print(calculette.soustraction(7,5))
-print(calculette.multiplication(7,-3))
-print(calculette.division(22,7,precision=6))
-print(calculette.exponentielle(2,10,precision=4))
-print(calculette.exponentielle(2,-3,precision=8))
-print(calculette.fibonacci(10))
+    calculette=Calculatrice()
 
-#12
-#2
-#-21
-#3.142857
-#1024
-#0.125
-#55
+    print(calculette.addition(7,5))
+    print(calculette.soustraction(7,5))
+    print(calculette.multiplication(7,-3))
+    print(calculette.division(22,7,precision=6))
+    print(calculette.exponentielle(2,10,precision=4))
+    print(calculette.exponentielle(2,-3,precision=8))
+    print(calculette.fibonacci(10))
+
+    #12
+    #2
+    #-21
+    #3.142857
+    #1024
+    #0.125
+    #55

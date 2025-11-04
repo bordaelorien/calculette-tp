@@ -1,4 +1,4 @@
-from calculs import *
+from Calculatrice import Calculatrice
 import tkinter as tk
 from tkinter import ttk
 
@@ -9,6 +9,8 @@ class App(tk.Tk):
         self.title("Calculatrice")
         self["bg"] = "#18222D"
         self.configStyles()
+
+        self.calculatrice = Calculatrice()
 
 
         left_panel = tk.Frame(self, bg="#1E2A37")
@@ -89,9 +91,9 @@ class App(tk.Tk):
             try:
                 first_number = int(first_number)
                 if operator == "Exponentielle":
-                    return exponentielle(first_number)
+                    return self.calculatrice.exponentielle(first_number)
                 else:
-                    return fibonacci(first_number)
+                    return self.calculatrice.fibonacci(first_number)
             except ValueError:
                 return "Erreur"
 
@@ -101,13 +103,13 @@ class App(tk.Tk):
                 first_number = int(first_number)
                 second_number = int(second_number)
                 if operator == "Addition":
-                    return addition(first_number, second_number)
+                    return self.calculatrice.addition(first_number, second_number)
                 elif operator == "Soustraction":
-                    return soustraction(first_number, second_number)
+                    return self.calculatrice.soustraction(first_number, second_number)
                 elif operator == "Multiplication":
-                    return multiplication(first_number, second_number)
+                    return self.calculatrice.multiplication(first_number, second_number)
                 else:
-                    return division(first_number, second_number)
+                    return self.calculatrice.division(first_number, second_number)
             except ValueError:
                 return "Erreur"
             except ZeroDivisionError:
