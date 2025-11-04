@@ -1,8 +1,6 @@
 #Projet Calculatrice Borda Elorien - Briffaut Milan
 
-git remote add origin https://github.com/bordaelorien/calculette-tp.git
-git branch -M main
-git push -u origin main
+https://github.com/bordaelorien/calculette-tp.git
 
 class calculatrice:
 
