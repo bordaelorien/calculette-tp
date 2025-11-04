@@ -1,5 +1,4 @@
 #Projet Calculatrice Borda Elorien - Briffaut Milan
-
 https://github.com/bordaelorien/calculette-tp.git
 
 class calculatrice:
