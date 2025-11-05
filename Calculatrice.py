@@ -77,7 +77,8 @@ class Calculatrice:
         #Conversion du résultat
         return float(resu)
 
-    def exponentielle(self,base:int,exp:int,precision:int):
+    #Fonction utile à l'exponentielle
+    def puissance(self,base:int,exp:int,precision:int):
         #Fin si l'exposant est nul
         if exp==0:
             return 1
@@ -101,6 +102,31 @@ class Calculatrice:
             i+=1
         #Renvoie de l'inverse avec la division
         return self.division(1,puissance,precision=precision)
+
+    #Fonction utile à  l'exponentielle
+    def factorielle(self,n:int):
+        if n<0:
+            raise ValueError("n doit être positif ou nul")
+        resu=1
+        for i in range(1,n+1):
+            resu*=i
+        return resu
+
+    def exponentielle(self,a:int,precision:int):
+        #Utilisation du développement limité de l'exponentielle à l'odre precision
+        resu=0
+        i=0
+        while i <= precision:
+            #Calcul de a**i
+            numerateur=self.puissance(a,i,precision)
+            #Calcul de i!
+            denominateur=self.factorielle(i)
+            #Calcul de a**i/i!
+            terme=self.division(numerateur,denominateur,precision)
+            #Ajout du terme au résultat
+            resu+=terme
+            i+=1
+        return resu
 
     def fibonacci(self,n:int):
         #Vérification du domaine de définition de la fonction
@@ -136,14 +162,14 @@ if __name__ == "__main__":
     print(calculette.soustraction(7,5))
     print(calculette.multiplication(7,-3))
     print(calculette.division(22,7,precision=6))
-    print(calculette.exponentielle(2,10,precision=4))
-    print(calculette.exponentielle(2,-3,precision=8))
+    print(calculette.exponentielle(2,precision=3))
+    print(calculette.exponentielle(0,precision=1))
     print(calculette.fibonacci(10))
 
     #12
     #2
     #-21
     #3.142857
-    #1024
-    #0.125
+    #6.333
+    #1.0
     #55
