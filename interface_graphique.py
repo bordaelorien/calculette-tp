@@ -12,7 +12,7 @@ class App(tk.Tk):
 
         self.calculatrice = Calculatrice()
 
-
+        #la fenêtre est divisée en deux frames
         left_panel = tk.Frame(self, bg="#1E2A37")
         left_panel.pack(side="left", padx=10, pady=10, fill="both")
         right_panel = tk.Frame(self, highlightcolor="#475363", highlightbackground="#475363", highlightthickness=1, 
@@ -20,58 +20,69 @@ class App(tk.Tk):
         right_panel.pack(side="right", padx=10, pady=10, fill="both")
 
         #left panel
-        self.lbox_options = tk.Listbox(left_panel, height=6, bg="#1E2A37", fg="white", font=("Arial", 15),
+        self.lbox_options = tk.Listbox(left_panel, height=7, bg="#1E2A37", fg="white", font=("Arial", 15),
                                         relief="flat", selectbackground="#5D6B7E", highlightcolor="#475363",
                                         highlightbackground="#475363", activestyle ="none",
                                         selectmode="single", exportselection=0)
-        for option in ["Addition", "Soustraction", "Multiplication", "Division", "Exponentielle", "Fibonacci"]:
+        #création de la listbox avec les options de calculs
+        for option in ["Addition", "Soustraction", "Multiplication", "Division", "Exponentielle", "Fibonacci", "EstPremier"]:
             self.lbox_options.insert("end", option)
         self.lbox_options.pack()
         self.lbox_options.bind("<<ListboxSelect>>", self.switchFrames)
 
         #right panel
         operations = {"Addition":"+", "Soustraction":"-", "Multiplication":"x", "Division":"/"}
-        fonctions = {"Exponentielle":"exp", "Fibonacci":"fibonacci"}
+        fonctions = {"Exponentielle":"exp", "Fibonacci":"fibonacci", "EstPremier":"estPremier"}
 
+        #création de frames superposées, une pour chaque mode de calcul
         self.frames_calculs = {}
-        for option in ["Addition", "Soustraction", "Multiplication", "Division", "Exponentielle", "Fibonacci"]:
+        for option in ["Addition", "Soustraction", "Multiplication", "Division", "Exponentielle", "Fibonacci", "EstPremier"]:
             self.frames_calculs[option] = tk.Frame(right_panel, bg="#1E2A37")
             self.frames_calculs[option].grid(column=0, row=0, sticky="nsew")
 
             subframe_top = tk.Frame(self.frames_calculs[option], bg="#1E2A37")
-            subframe_top.pack(side="top")
+            subframe_top.pack(side="top", pady=[10,5])
             subframe_bottom = tk.Frame(self.frames_calculs[option], bg="#1E2A37")
             subframe_bottom.pack(side="bottom")
 
             resultat = tk.StringVar()
+            #label en bas qui affiche le résultat
             ttk.Label(subframe_bottom, textvariable=resultat).pack(side="bottom")
 
             if option in operations:
+                #entry à gauche
                 first_number = tk.Entry(subframe_top, bg="#5D6B7E", fg="white", font=("Arial", 15),
                                         justify="center", relief="flat", width=12)
                 first_number.pack(side="left", padx=[10,0])
+                #symbole de l'opération au milieu
                 ttk.Label(subframe_top, text=operations[option]).pack(side="left")
+                #entry à droite
                 second_number = tk.Entry(subframe_top, bg="#5D6B7E", fg="white", font=("Arial", 15),
                                          justify="center", relief="flat", width=12)
                 second_number.pack(side="right", padx=[0,10])
+                #bouton qui déclenche le calcul du résultat quand on le clique
                 ttk.Button(subframe_bottom, text="Calculer", takefocus=False,
                           command=lambda resultat=resultat, operator=option, first_number=first_number, second_number=second_number: 
                           resultat.set("Résultat : "+str(self.calculeResultat(operator, first_number.get(), second_number.get())))
                           ).pack(side="top")
 
             else:
+                #nom de la fonction à gauche
                 ttk.Label(subframe_top, text=fonctions[option]+"(").pack(side="left")
+                #entry au milieu
                 number = tk.Entry(subframe_top, bg="#5D6B7E", fg="white", font=("Arial", 15),
                                   justify="center", relief="flat", width=12)
                 number.pack(side="left")
+                #parenthèse à droite
                 ttk.Label(subframe_top, text=")").pack(side="left")
+                #bouton qui déclenche le calcul du résultat quand on le clique
                 ttk.Button(subframe_bottom, text="Calculer", takefocus=False,
                           command=lambda resultat=resultat, operator=option, number=number: 
                           resultat.set("Résultat : "+str(self.calculeResultat(operator, number.get())))
                           ).pack(side="top")
 
 
-
+        #on sélectionne l'option "addition" par défaut
         self.lbox_options.select_set(0)
         self.frames_calculs["Addition"].tkraise()
 
@@ -91,9 +102,11 @@ class App(tk.Tk):
             try:
                 first_number = int(first_number)
                 if operator == "Exponentielle":
-                    return self.calculatrice.exponentielle(first_number)
-                else:
+                    return round(self.calculatrice.exponentielle(first_number), 5)
+                elif operator == "Fibonacci":
                     return self.calculatrice.fibonacci(first_number)
+                else:
+                    return self.calculatrice.estPremier(first_number)
             except ValueError:
                 return "Erreur"
 
@@ -114,7 +127,9 @@ class App(tk.Tk):
                 return "Erreur"
             except ZeroDivisionError:
                 return "Erreur"
-            
+
+    
+    #configuration du style des widgets avec ttk.Style()      
     def configStyles(self):
         style = ttk.Style()
         

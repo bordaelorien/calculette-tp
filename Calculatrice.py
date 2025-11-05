@@ -112,7 +112,7 @@ class Calculatrice:
             resu*=i
         return resu
 
-    def exponentielle(self,a:int,precision:int):
+    def exponentielle(self,a:int,precision=20):
         #Utilisation du développement limité de l'exponentielle à l'odre precision
         resu=0
         i=0
@@ -151,6 +151,30 @@ class Calculatrice:
             i+=1
         #F_1 correspond alors à F(n)
         return F_1
+    
+    def modulo(self, a:int, b:int):
+        quotient=0
+        reste=a
+        while reste>=b:
+            reste-=b
+            quotient+=1
+        return reste
+
+    def estPremier(self, a:int):
+        if a < 0:
+            raise ValueError
+        elif a < 2:
+            return False
+        elif a == 2:
+            return True
+        else:
+            if self.modulo(a, 2) == 0:
+                return False
+            for i in range(3, a, 2):
+                if self.modulo(a,i) == 0:
+                    return False
+            return True
+
 
 
 if __name__ == "__main__":
@@ -162,9 +186,10 @@ if __name__ == "__main__":
     print(calculette.soustraction(7,5))
     print(calculette.multiplication(7,-3))
     print(calculette.division(22,7,precision=6))
-    print(calculette.exponentielle(2,precision=3))
+    print(calculette.exponentielle(2,precision=8))
     print(calculette.exponentielle(0,precision=1))
     print(calculette.fibonacci(10))
+    print(calculette.estPremier(31))
 
     #12
     #2
